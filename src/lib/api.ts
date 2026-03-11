@@ -4,16 +4,32 @@ import { Snippet, SnippetWithTags, Tag } from '@/types';
 const supabase = createClient();
 
 export const api = {
-  // Fetch a single snippet with tags
+  // Fetch a single snippet with tags and manual profile join
   async getSnippet(id: string) {
-    const { data, error } = await supabase
+    // 1. Fetch snippet and tags
+    const { data: snippet, error: snippetError } = await supabase
       .from('snippets')
-      .select('*, profiles(username, display_name), snippet_tags(tags(*))')
+      .select('*, snippet_tags(tags(*))')
       .eq('id', id)
       .single();
 
-    if (error) throw error;
-    return data as SnippetWithTags;
+    if (snippetError) throw snippetError;
+    if (!snippet) return null;
+
+    // 2. Fetch profile
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('username, display_name, avatar_url')
+      .eq('id', snippet.user_id)
+      .single();
+
+    // It's okay if profile is missing, but log it
+    if (profileError) console.error('Error fetching profile for snippet:', profileError);
+
+    return {
+      ...snippet,
+      profiles: profile
+    } as SnippetWithTags;
   },
 
   // Fetch all snippets for the logged-in user
@@ -31,24 +47,38 @@ export const api = {
     return data as SnippetWithTags[];
   },
 
-  // Fetch all public snippets
+  // Fetch all public snippets with manual join for profiles to avoid relationship cache issues
   async getPublicSnippets(page: number = 0, limit: number = 10): Promise<SnippetWithTags[]> {
     const from = page * limit;
     const to = from + limit - 1;
 
-    const { data, error } = await supabase
+    // 1. Fetch snippets and tags (this join works)
+    const { data: snippets, error } = await supabase
       .from('snippets')
-      .select(`
-        *,
-        profiles(username, display_name),
-        snippet_tags(tags(*))
-      `)
+      .select('*, snippet_tags(tags(*))')
       .eq('is_public', true)
       .order('created_at', { ascending: false })
       .range(from, to);
 
     if (error) throw error;
-    return data as SnippetWithTags[];
+    if (!snippets || snippets.length === 0) return [];
+
+    // 2. Fetch profiles for these snippets
+    const userIds = Array.from(new Set(snippets.map(s => s.user_id)));
+    const { data: profiles, error: profileError } = await supabase
+      .from('profiles')
+      .select('id, username, display_name, avatar_url')
+      .in('id', userIds);
+
+    if (profileError) throw profileError;
+
+    // 3. Merge profiles into snippets
+    const profileMap = new Map(profiles?.map(p => [p.id, p]));
+    
+    return snippets.map(s => ({
+      ...s,
+      profiles: profileMap.get(s.user_id)
+    })) as SnippetWithTags[];
   },
 
   // Create a new snippet with tags
