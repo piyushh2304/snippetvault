@@ -1,11 +1,12 @@
 import { createClient } from './supabase/client';
 import { Snippet, SnippetWithTags, Tag } from '@/types';
 
-const supabase = createClient();
+const getSupabase = () => createClient();
 
 export const api = {
   // Fetch a single snippet with tags and manual profile join
   async getSnippet(id: string) {
+    const supabase = getSupabase();
     // 1. Fetch snippet and tags
     const { data: snippet, error: snippetError } = await supabase
       .from('snippets')
@@ -34,6 +35,7 @@ export const api = {
 
   // Fetch all snippets for the logged-in user
   async getMySnippets() {
+    const supabase = getSupabase();
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) throw new Error('Not authenticated');
 
@@ -49,6 +51,7 @@ export const api = {
 
   // Fetch all public snippets with manual join for profiles to avoid relationship cache issues
   async getPublicSnippets(page: number = 0, limit: number = 10): Promise<SnippetWithTags[]> {
+    const supabase = getSupabase();
     const from = page * limit;
     const to = from + limit - 1;
 
@@ -83,6 +86,7 @@ export const api = {
 
   // Create a new snippet with tags
   async createSnippet(payload: Partial<Snippet> & { tags?: string[] }) {
+    const supabase = getSupabase();
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) throw new Error('Not authenticated');
 
@@ -134,6 +138,7 @@ export const api = {
 
   // Update an existing snippet
   async updateSnippet(id: string, payload: Partial<Snippet> & { tags?: string[] }) {
+    const supabase = getSupabase();
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) throw new Error('Not authenticated');
 
@@ -191,6 +196,7 @@ export const api = {
 
   // Fetch public profile data (profile + snippets)
   async getPublicProfile(identifier: string) {
+    const supabase = getSupabase();
     const isUuid = identifier.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
     
     // Step 1: Fetch Profile
@@ -216,6 +222,7 @@ export const api = {
 
   // Get users a snippet is shared with
   async getShares(snippetId: string) {
+    const supabase = getSupabase();
     const { data, error } = await supabase
       .from('snippet_shares')
       .select('id, shared_with, profiles(display_name, avatar_url, username)')
@@ -227,6 +234,7 @@ export const api = {
 
   // Share snippet with a user by email
   async addShare(snippetId: string, email: string) {
+    const supabase = getSupabase();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Not authenticated');
 
@@ -256,6 +264,7 @@ export const api = {
 
   // Remove a share
   async removeShare(shareId: string) {
+    const supabase = getSupabase();
     const { error } = await supabase
       .from('snippet_shares')
       .delete()
@@ -266,6 +275,7 @@ export const api = {
 
   // Delete a snippet
   async deleteSnippet(id: string) {
+    const supabase = getSupabase();
     const { error } = await supabase
       .from('snippets')
       .delete()
