@@ -32,12 +32,16 @@ export const api = {
   },
 
   // Fetch all public snippets
-  async getPublicSnippets() {
+  async getPublicSnippets(page: number = 0, limit: number = 10): Promise<SnippetWithTags[]> {
+    const from = page * limit;
+    const to = from + limit - 1;
+
     const { data, error } = await supabase
       .from('snippets')
-      .select('*, profiles(username, display_name), snippet_tags(tags(*))')
+      .select('*, profiles(username), tags(*)')
       .eq('is_public', true)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .range(from, to);
 
     if (error) throw error;
     return data as SnippetWithTags[];

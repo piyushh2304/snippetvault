@@ -11,10 +11,10 @@ export function useSnippets() {
   });
 }
 
-export function usePublicSnippets() {
+export function usePublicSnippets(page: number = 0) {
   return useQuery<SnippetWithTags[]>({
-    queryKey: ['public-snippets'],
-    queryFn: api.getPublicSnippets,
+    queryKey: ['public-snippets', page],
+    queryFn: () => api.getPublicSnippets(page),
     staleTime: 5 * 60 * 1000, // Public snippets can be cached longer
   });
 }

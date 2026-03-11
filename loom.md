@@ -1,67 +1,63 @@
 # 🎬 Loom Video Submission Guide: SnippetVault
 
-Follow this script to ensure your video strictly follows the mandate. Aim for a **5-7 minute** duration.
+This script is optimized to highlight the core architecture, high-performance UI, and the recently added **Public Explore** features. Aim for a **5-7 minute** professional walkthrough.
 
 ---
 
 ## 🕒 0:00 - 1:00 | Segment 1: Introduction
 **Directly to Camera (Face Visible)**
-- **Greeting**: "Hi, I'm **Piyush Rajput**, currently based in **Indore, MP**."
-- **Education**: "I am a **Computer Science Engineering graduate** from the Indore Institute of Science and Technology (Expected 2026)."
-- **Experience Summary**:
-    - "I have hands-on experience in **Frontend Development** using **React and Next.js**, specifically building high-performance UIs with **Tailwind CSS and shadcn/ui**."
-    - "My backend expertise includes working with **Node.js** and **Supabase**, where I've implemented complex **Row Level Security (RLS)** and authentication flows."
-    - "In my previous internships at **Param Info** and **Alphanext**, I built AI-driven automation tools and full-stack MERN applications."
+- **Greeting**: "Hello! I'm **Piyush Rajput**, joining you from **Indore, MP**."
+- **Education**: "I'm a final-year **Computer Science Engineering student** at the Indore Institute of Science and Technology, graduating in 2026."
+- **Technical Focus**:
+    - "I specialize in **Frontend Engineering** with **React and Next.js**, and I have a deep interest in building performant, type-safe web applications."
+    - "My background includes internships at **Param Info** and **Alphanext**, where I developed AI-driven automation and modern full-stack solutions."
+    - "In this project, I've prioritized **zero-lint production-ready code** and a **premium developer experience**."
 
 ---
 
-## 🕒 1:00 - 1:45 | Segment 2: Project Overview
+## 🕒 1:00 - 2:00 | Segment 2: Project Vision & Architecture
 **Switch to Screen + Camera (Bubble)**
-- "Today, I’m presenting **SnippetVault**—a premium code snippet manager for developers."
-- "The goal was to create a focused alternative to GitHub Gists where users can save, search, and share logic effortlessly."
-- "The app features two distinct modes: an **Authenticated Workspace** for personal management and **Public-facing Profile pages** for community sharing."
+- "I’m presenting **SnippetVault**—a high-performance, secure code snippet manager for modern developers."
+- "The core architectural principle was **separation of concerns**: I've created a private, authenticated workspace for personal management and a public-facing domain for discovery and sharing."
+- "Technically, it's built on **Next.js 16**, **Supabase**, and **Tailwind CSS**, with **TanStack Query** for robust state management and caching."
 
 ---
 
-## 🕒 1:45 - 3:30 | Segment 3: Implementation Walkthrough
+## 🕒 2:00 - 3:30 | Segment 3: The Private Workspace (Dashboard)
 **Live Demo of Dashboard**
-- **Authentication**: Show the Login/Signup pages. "I implemented authentication using **Supabase Auth**. I used Next.js Middleware to ensure protected routes for the dashboard while keeping public snippets accessible to everyone."
-- **Dashboard Features**:
-    - **Create**: Click 'Create Snippet'. Show the form with validation.
-    - **Search & Filter**: Type in the search bar and click a tag (e.g., 'React'). "I used **Zustand** for global UI state and **memoized filtering** to ensure the search remains snappy even with hundreds of snippets."
-    - **Edit/Delete**: Show the edit sheet and the **AlertDialog** for safe deletion. "I focused on UX feedback here, using **Sonner** for toast notifications and confirmation dialogs."
+- **Protected Routes**: "I used Next.js Middleware and Supabase Auth to protect the `/dashboard`. It's fast, secure, and intuitive."
+- **Live Search & Filtering**: "Notice how searching for 'React' or filtering by tags is instantaneous. I've implemented **Zustand** for lightweight global UI state and memoized filtering to ensure performance doesn't degrade as the vault grows."
+- **CRUD Operations**: "Creating a snippet is seamless with real-time validation. I used **react-hook-form** with **Zod** schema validation to ensure data integrity at every step."
+- **UX Details**: "I used **Sonner** for beautiful, non-intrusive feedback and **alertDialogs** for destructive actions, providing a safe and premium feel."
 
 ---
 
-## 🕒 3:30 - 4:45 | Segment 4: Sharing Mechanisms
-**Show the Sharing Sheet**
-- **Public URL**: "Every snippet has a unique public URL. If the snippet is toggled to 'Public', anyone with the link can view it."
-- **Specific User Sharing**: "I built a collaboration feature using a `snippet_shares` table in Supabase. You can invite other users via email."
-- **Image Export**: Click 'Export as Image'. "I used **html-to-image** to generate professional code preview images, perfect for sharing on social media or documentation."
-- **Clipboard Sharing**: Show the 'Copy Link' button. "I implemented the Clipboard API with immediate visual feedback."
+## 🕒 3:30 - 4:45 | Segment 4: Public Discovery (The Explore Page)
+**Navigate to `/explore`**
+- "New in this version is the **Public Explore page**. This is where shared knowledge comes alive. Anyone can browse, search, and discover code snippets shared by the community."
+- "This demonstrates the **public-facing side** of SnippetVault. It uses a specialized public API layer and optimized caching to serve shared content without requiring authentication."
+- "Clicking on an author's profile (`/u/[username]`) takes you to their curated public collection, while individual snippets (`/s/[id]`) provide a focused view with premium syntax highlighting."
 
 ---
 
-## 🕒 4:45 - 6:00 | Segment 5: Technical Decisions & UX
-- **Syntax Highlighting**: Open a public snippet page (`/s/[id]`). "For the code preview, I used **react-syntax-highlighter** with the Prism engine and a custom atom-dark theme to provide a high-end IDE feel."
-- **UX Features**: Point out the loading states and the glassmorphism design. "I used **Tailwind CSS** for a deep-theme aesthetic and **Lucide React** for consistent iconography."
-- **Architecture**:
-    - "I chose **Next.js 16** for its powerful App Router and Server Components."
-    - "The data fetching is handled by **TanStack Query (v5)**, allowing for efficient caching and optimistic updates (like during snippet deletion)."
-    - "The database is **PostgreSQL on Supabase**, secured with granular **RLS policies** to protect private snippets while allowing public visibility for shared collections."
+## 🕒 4:45 - 6:00 | Segment 5: Technical Excellence & Design
+- **Syntax Highlighting**: "The preview is powered by **react-syntax-highlighter** with the Prism engine and a custom atom-dark theme, delivering an IDE-grade visual experience."
+- **Code Quality**: "One thing I'm particularly proud of is the codebase itself. I've achieved a **zero-lint, zero-error build**, ensuring high stability and maintainability using strict TypeScript types."
+- **Premium Aesthetics**: "The design uses a **deep-space aesthetic with glassmorphism** and subtle **Framer Motion** animations. It's built for developers who appreciate a clean, high-end workspace."
+- **Security (RLS)**: "Under the hood, **Supabase Row Level Security (RLS)** ensures that private snippets remain private, while shared snippets are globally accessible based on the `is_public` flag."
 
 ---
 
 ## 🕒 6:00 - 6:30 | Segment 6: Conclusion
 **Back to Full Camera**
-- "SnippetVault isn't just a basic CRUD app; it's a production-ready tool focused on security, speed, and standardizing the developer sharing experience."
-- "Thank you for reviewing my submission. I look forward to the next steps!"
+- "SnippetVault is a complete, production-ready solution that combines security, speed, and standard-compliant architecture."
+- "I've focused on making it a tool I would actually use daily to secure and share my knowledge."
+- "Thank you for your time and for reviewing my submission!"
 
 ---
 
-### ✅ Checklist Before You Hit Record:
-1. [ ] **Lighting**: Is your face clearly lit?
-2. [ ] **Audio**: Are you using a clear microphone?
-3. [ ] **Seed Data**: Have you run `seed_data.sql` so your dashboard looks full?
-4. [ ] **Public Snippet**: Ensure at least one snippet is set to **Public** for the demo.
-5. [ ] **Loom Pro Tip**: Record in High Definition (1080p if possible).
+### ✅ Preparation Checklist:
+1. [ ] **Environment**: Ensure `.env.local` is set and you have public snippets in your DB.
+2. [ ] **Seed Data**: Run `seed_data.sql` so the Explore and Dashboard pages are populated.
+3. [ ] **Resolution**: Record in 1080p.
+4. [ ] **Flow**: Open the Dashboard, Explore page, and a public snippet in separate tabs beforehand for smooth transitions.
