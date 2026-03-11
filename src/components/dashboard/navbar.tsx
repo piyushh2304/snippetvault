@@ -12,13 +12,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { User, LogOut, LayoutDashboard, Globe } from 'lucide-react'
+import { LogOut, LayoutDashboard, Globe } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { Profile } from '@/types'
+import { User } from '@supabase/supabase-js'
 
 export function Navbar() {
-  const [user, setUser] = useState<any>(null)
-  const [profile, setProfile] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
   const supabase = createClient()
   const router = useRouter()
 
@@ -71,6 +73,12 @@ export function Navbar() {
             <span className="font-black text-xl tracking-tighter text-white uppercase group-hover:tracking-normal transition-all">Vault</span>
           </Link>
         </motion.div>
+
+        <div className="hidden md:flex items-center gap-8 ml-8">
+          <Link href="/explore">
+            <span className="text-xs font-bold text-slate-500 hover:text-white uppercase tracking-widest transition-colors">Explore</span>
+          </Link>
+        </div>
 
         <motion.div 
           initial={{ opacity: 0, x: 20 }}

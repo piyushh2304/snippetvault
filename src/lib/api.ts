@@ -1,5 +1,5 @@
 import { createClient } from './supabase/client';
-import { Snippet, SnippetWithTags } from '@/types';
+import { Snippet, SnippetWithTags, Tag } from '@/types';
 
 const supabase = createClient();
 
@@ -13,7 +13,7 @@ export const api = {
       .single();
 
     if (error) throw error;
-    return data as any; // Cast for now, update types later if needed
+    return data as SnippetWithTags;
   },
 
   // Fetch all snippets for the logged-in user
@@ -25,6 +25,18 @@ export const api = {
       .from('snippets')
       .select('*, snippet_tags(tags(*))')
       .eq('user_id', session.user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data as SnippetWithTags[];
+  },
+
+  // Fetch all public snippets
+  async getPublicSnippets() {
+    const { data, error } = await supabase
+      .from('snippets')
+      .select('*, profiles(username, display_name), snippet_tags(tags(*))')
+      .eq('is_public', true)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -56,7 +68,7 @@ export const api = {
         .eq('user_id', session.user.id)
         .in('name', tags);
 
-      const existingTagNames = existingTags?.map((t: any) => t.name) || [];
+      const existingTagNames = existingTags?.map((t: Tag) => t.name) || [];
       const tagsToCreate = tags.filter(name => !existingTagNames.includes(name));
 
       let allTags = [...(existingTags || [])];
@@ -75,7 +87,7 @@ export const api = {
       if (allTags.length > 0) {
         await supabase
           .from('snippet_tags')
-          .insert(allTags.map((t: any) => ({ snippet_id: snippet.id, tag_id: t.id })));
+          .insert(allTags.map((t: Tag) => ({ snippet_id: snippet.id, tag_id: t.id })));
       }
     }
 
@@ -112,7 +124,7 @@ export const api = {
           .eq('user_id', session.user.id)
           .in('name', tags);
 
-        const existingTagNames = existingTags?.map((t: any) => t.name) || [];
+        const existingTagNames = existingTags?.map((t: Tag) => t.name) || [];
         const tagsToCreate = tags.filter(name => !existingTagNames.includes(name));
 
         let allTags = [...(existingTags || [])];
@@ -131,7 +143,7 @@ export const api = {
         if (allTags.length > 0) {
           await supabase
             .from('snippet_tags')
-            .insert(allTags.map((t: any) => ({ snippet_id: id, tag_id: t.id })));
+            .insert(allTags.map((t: Tag) => ({ snippet_id: id, tag_id: t.id })));
         }
       }
     }

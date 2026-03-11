@@ -21,7 +21,7 @@ const itemVariants = {
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" as any }
+    transition: { duration: 0.6, ease: "easeOut" as const }
   }
 };
 
@@ -67,6 +67,11 @@ export default function Home() {
           <Link href="/signup">
             <Button variant="outline" size="lg" className="h-16 px-10 border-slate-800 bg-slate-900/30 hover:bg-slate-800/50 text-slate-200 rounded-2xl text-xl font-bold backdrop-blur-md transition-all hover:scale-105 active:scale-95">
               Explore Demo
+            </Button>
+          </Link>
+          <Link href="/explore">
+            <Button variant="ghost" size="lg" className="h-16 px-10 text-slate-400 hover:text-white rounded-2xl text-xl font-bold transition-all hover:scale-105 active:scale-95">
+              Browse Public
             </Button>
           </Link>
         </motion.div>

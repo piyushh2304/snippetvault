@@ -11,6 +11,14 @@ export function useSnippets() {
   });
 }
 
+export function usePublicSnippets() {
+  return useQuery<SnippetWithTags[]>({
+    queryKey: ['public-snippets'],
+    queryFn: api.getPublicSnippets,
+    staleTime: 5 * 60 * 1000, // Public snippets can be cached longer
+  });
+}
+
 export function useSnippet(id: string | null) {
   const queryClient = useQueryClient();
   return useQuery<SnippetWithTags | null>({
@@ -117,8 +125,8 @@ export function useAddShare() {
       queryClient.invalidateQueries({ queryKey: ['shares', variables.snippetId] });
       toast.success('Snippet shared successfully');
     },
-    onError: (error: any) => {
-      toast.error(error.message || 'Failed to share snippet');
+    onError: (error: unknown) => {
+      toast.error((error as Error).message || 'Failed to share snippet');
     },
   });
 }
@@ -127,7 +135,7 @@ export function useRemoveShare() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: api.removeShare,
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       // We don't have snippetId in removeShare response easily?
       // Re-invalidate all shares for safety or passed in
       queryClient.invalidateQueries({ queryKey: ['shares'] });
