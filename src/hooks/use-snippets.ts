@@ -16,6 +16,7 @@ export function usePublicSnippets(page: number = 0) {
     queryKey: ['public-snippets', page],
     queryFn: () => api.getPublicSnippets(page),
     staleTime: 5 * 60 * 1000, // Public snippets can be cached longer
+    refetchOnWindowFocus: false, // Prevent automatic reload on tab change
   });
 }
 

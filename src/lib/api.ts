@@ -38,7 +38,11 @@ export const api = {
 
     const { data, error } = await supabase
       .from('snippets')
-      .select('*, profiles(username), tags(*)')
+      .select(`
+        *,
+        profiles(username, display_name),
+        snippet_tags(tags(*))
+      `)
       .eq('is_public', true)
       .order('created_at', { ascending: false })
       .range(from, to);
